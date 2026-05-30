@@ -1,0 +1,43 @@
+header:
+  version: 14
+
+machine: raspberrypi0-2w
+distro: poky
+target: core-image-minimal
+
+repos:
+  poky:
+    url: https://git.yoctoproject.org/poky
+    branch: scarthgap
+    layers:
+      meta:
+      meta-poky:
+  meta-openembedded:
+    url: https://git.openembedded.org/meta-openembedded
+    branch: scarthgap
+    layers:
+      meta-oe:
+      meta-python:
+      meta-networking:
+      meta-multimedia:
+  meta-raspberrypi:
+    url: https://git.yoctoproject.org/meta-raspberrypi
+    branch: scarthgap
+  meta-local:
+    path: meta-local
+
+local_conf_header:
+  minimal-config: |
+    DISTRO_FEATURES:remove = "x11 wayland opengl ptest bluetooth bluez5 pulseaudio alsa 3g nfc pcmcia api-documentation"
+    DISTRO_FEATURES:append = " wifi"
+    IMAGE_INSTALL:remove = "wpa-supplicant dhcpcd man-pages man-db info"
+    IMAGE_INSTALL:append = " iwd"
+    IMAGE_FEATURES:append = " ssh-server-dropbear"
+    GPU_MEM = "16"
+    DISABLE_VC4GRAPHICS = "1"
+    ENABLE_HDMI = "0"
+    ENABLE_AUDIO = "0"
+    GLIBC_GENERATE_LOCALES = "en_US.UTF-8"
+    IMAGE_LINGUAS = "en-us"
+    INHERIT += "rm_work"
+    PACKAGE_CLASSES = "package_ipk"

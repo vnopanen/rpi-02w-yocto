@@ -1,0 +1,20 @@
+# Yocto/BitBake build directory
+build/
+
+# Kas specific
+.kas/
+.kas_shell_history
+
+# Secrets and local environment
+.env
+
+# Sub-repositories managed by kas
+poky/
+meta-openembedded/
+meta-raspberrypi/
+
+# Temporary files
+tmp.txt
+*.swp
+*.bak
+*~
