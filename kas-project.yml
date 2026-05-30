@@ -6,15 +6,23 @@ distro: poky
 target: core-image-minimal
 
 repos:
-  poky:
-    url: https://git.yoctoproject.org/poky
-    branch: scarthgap
+  bitbake:
+    url: https://git.openembedded.org/bitbake
+    branch: "2.18"
+    layers: {}
+  openembedded-core:
+    url: https://git.openembedded.org/openembedded-core
+    branch: wrynose
     layers:
       meta:
+  meta-yocto:
+    url: https://git.yoctoproject.org/meta-yocto
+    branch: wrynose
+    layers:
       meta-poky:
   meta-openembedded:
     url: https://git.openembedded.org/meta-openembedded
-    branch: scarthgap
+    branch: wrynose
     layers:
       meta-oe:
       meta-python:
@@ -22,7 +30,7 @@ repos:
       meta-multimedia:
   meta-raspberrypi:
     url: https://git.yoctoproject.org/meta-raspberrypi
-    branch: scarthgap
+    branch: master
   meta-local:
     path: meta-local
 

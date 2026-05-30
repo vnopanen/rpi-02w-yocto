@@ -9,7 +9,9 @@ build/
 .env
 
 # Sub-repositories managed by kas
-poky/
+bitbake/
+openembedded-core/
+meta-yocto/
 meta-openembedded/
 meta-raspberrypi/
 
