@@ -16,3 +16,14 @@ inject_iwd_config() {
     chmod 600 ${IMAGE_ROOTFS}/var/lib/iwd/"${WIFI_SSID}.psk"
 }
 ROOTFS_POSTPROCESS_COMMAND += "inject_iwd_config;"
+
+python () {
+    import subprocess
+
+    repo_dir = d.getVar("TOPDIR")
+    rev = subprocess.check_output(
+        ["git", "-C", repo_dir, "describe", "--tags", "--always", "--dirty"]
+    ).strip().decode('utf-8')
+    d.setVar("GIT_SHA", f"{rev}")
+    d.setVar("IMAGE_VERSION_SUFFIX", f"-{rev}")
+}
