@@ -41,6 +41,7 @@ local_conf_header:
     IMAGE_INSTALL:remove = "wpa-supplicant dhcpcd man-pages man-db info"
     IMAGE_INSTALL:append = " iwd"
     IMAGE_FEATURES:append = " ssh-server-dropbear"
+    IMAGE_FSTYPES = "wic.zst"
     GPU_MEM = "16"
     DISABLE_VC4GRAPHICS = "1"
     ENABLE_HDMI = "0"
