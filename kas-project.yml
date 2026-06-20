@@ -46,6 +46,7 @@ local_conf_header:
     DISABLE_VC4GRAPHICS = "1"
     ENABLE_HDMI = "0"
     ENABLE_AUDIO = "0"
+    ENABLE_UART = "1"
     GLIBC_GENERATE_LOCALES = "en_US.UTF-8"
     IMAGE_LINGUAS = "en-us"
     INHERIT += "rm_work"
