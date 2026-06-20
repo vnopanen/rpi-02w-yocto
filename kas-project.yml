@@ -40,7 +40,7 @@ local_conf_header:
     DISTRO_FEATURES:append = " wifi"
     IMAGE_INSTALL:remove = "wpa-supplicant dhcpcd man-pages man-db info"
     IMAGE_INSTALL:append = " iwd"
-    IMAGE_FEATURES:append = " ssh-server-dropbear"
+    IMAGE_FEATURES:append = " ssh-server-dropbear empty-root-password"
     IMAGE_FSTYPES = "wic.zst wic.bmap"
     GPU_MEM = "16"
     DISABLE_VC4GRAPHICS = "1"
