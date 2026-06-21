@@ -47,6 +47,9 @@ local_conf_header:
     ENABLE_HDMI = "0"
     ENABLE_AUDIO = "0"
     ENABLE_UART = "1"
+    RPI_EXTRA_CONFIG += 'dtoverlay=disable-bt'
+    SERIAL_CONSOLES = "115200;ttyAMA0"
+    CMDLINE:append = " ipv6.disable=1"
     GLIBC_GENERATE_LOCALES = "en_US.UTF-8"
     IMAGE_LINGUAS = "en-us"
     INHERIT += "rm_work"
