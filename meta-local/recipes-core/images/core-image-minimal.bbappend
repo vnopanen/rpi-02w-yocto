@@ -1,18 +1,26 @@
-inject_iwd_config() {
-    ENV_FILE="${TOPDIR}/../.env"
-    TEMPLATE_FILE="${TOPDIR}/../files/wifi.psk"
-    if [ -f "$ENV_FILE" ]; then
-        . "$ENV_FILE"
-    else
-        bbfatal "Credential file .env not found in project root."
-    fi
-    if [ -z "$WIFI_SSID" ] || [ -z "$WIFI_PASSWORD" ]; then
-        bbfatal "WIFI_SSID or WIFI_PASSWORD not defined in .env"
-    fi
-    install -d ${IMAGE_ROOTFS}/var/lib/iwd
-    install -d ${IMAGE_ROOTFS}/etc/iwd
-    install -m 644 ${TOPDIR}/../files/main.conf ${IMAGE_ROOTFS}/etc/iwd/main.conf
-    sed "s/PLACEHOLDER_PASSWORD/${WIFI_PASSWORD}/g" "$TEMPLATE_FILE" > ${IMAGE_ROOTFS}/var/lib/iwd/"${WIFI_SSID}.psk"
-    chmod 600 ${IMAGE_ROOTFS}/var/lib/iwd/"${WIFI_SSID}.psk"
+python () {
+    import os
+    env_path = os.path.normpath(os.path.join(d.getVar('TOPDIR'), '..', '.env'))
+    if os.path.exists(env_path):
+        with open(env_path, 'r') as f:
+            for line in f:
+                if '=' in line:
+                    key, val = line.strip().split('=', 1)
+                    d.setVar(key, val)
 }
-ROOTFS_POSTPROCESS_COMMAND += "inject_iwd_config;"
+
+configure_wpa_supplicant() {
+    cat <<EOF > ${IMAGE_ROOTFS}/etc/wpa_supplicant.conf
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+update_config=1
+
+network={
+    ssid="${WIFI_SSID}"
+    psk="${WIFI_PSK}"
+    key_mgmt=WPA-PSK
+ } # leading space so bitbake parses correctly
+EOF
+    chmod 600 ${IMAGE_ROOTFS}/etc/wpa_supplicant.conf
+}
+ROOTFS_POSTPROCESS_COMMAND += "configure_wpa_supplicant;"
