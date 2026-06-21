@@ -39,7 +39,7 @@ local_conf_header:
     DISTRO_FEATURES:remove = "x11 wayland opengl ptest bluetooth bluez5 pulseaudio alsa 3g nfc pcmcia api-documentation"
     DISTRO_FEATURES:append = " wifi"
     IMAGE_INSTALL:remove = "man-pages man-db info"
-    IMAGE_INSTALL:append = " ${MACHINE_EXTRA_RRECOMMENDS} wpa-supplicant"
+    IMAGE_INSTALL:append = " ${MACHINE_EXTRA_RRECOMMENDS} wpa-supplicant init-ifupdown"
     IMAGE_FEATURES:append = " ssh-server-dropbear empty-root-password"
     IMAGE_FSTYPES = "wic.zst wic.bmap"
     GPU_MEM = "16"

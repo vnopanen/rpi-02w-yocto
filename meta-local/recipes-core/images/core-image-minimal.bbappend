@@ -23,4 +23,17 @@ network={
 EOF
     chmod 600 ${IMAGE_ROOTFS}/etc/wpa_supplicant.conf
 }
-ROOTFS_POSTPROCESS_COMMAND += "configure_wpa_supplicant;"
+
+configure_network_interfaces() {
+    install -d ${IMAGE_ROOTFS}/etc/network/
+    cat <<EOF > ${IMAGE_ROOTFS}/etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto wlan0
+iface wlan0 inet dhcp
+    wpa-conf /etc/wpa_supplicant.conf
+EOF
+}
+
+ROOTFS_POSTPROCESS_COMMAND += "configure_wpa_supplicant; configure_network_interfaces;"
