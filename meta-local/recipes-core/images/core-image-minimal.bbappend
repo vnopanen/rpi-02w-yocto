@@ -6,6 +6,7 @@ python () {
             for line in f:
                 if '=' in line:
                     key, val = line.strip().split('=', 1)
+                    val = val.strip().strip('\'"')
                     d.setVar(key, val)
 }
 
@@ -17,7 +18,7 @@ update_config=1
 
 network={
     ssid="${WIFI_SSID}"
-    psk="${WIFI_PSK}"
+    psk=${WIFI_PSK}
     key_mgmt=WPA-PSK
  } # leading space so bitbake parses correctly
 EOF
