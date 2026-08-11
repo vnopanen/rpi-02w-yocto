@@ -30,7 +30,7 @@ repos:
       meta-multimedia:
   meta-raspberrypi:
     url: https://git.yoctoproject.org/meta-raspberrypi
-    branch: master
+    branch: wrynose
   meta-local:
     path: meta-local
 
