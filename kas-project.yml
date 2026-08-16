@@ -44,7 +44,8 @@ local_conf_header:
       init-ifupdown \
       linux-firmware-rpidistro-bcm43430 \
       udev-rules-rpi \
-      kernel-module-brcmfmac"
+      kernel-module-brcmfmac \
+      yocto-mcp"
     WKS_FILE_DEPENDS_BOOTLOADERS:remove:aarch64 = "grub-efi systemd-boot"
     WKS_FILE_DEPENDS:remove = "cdrtools-native btrfs-tools-native"
     IMAGE_FEATURES:append = " ssh-server-dropbear"
