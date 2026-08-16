@@ -31,11 +31,17 @@ repos:
   meta-raspberrypi:
     url: https://git.yoctoproject.org/meta-raspberrypi
     branch: wrynose
+  meta-rauc:
+    url: https://github.com/rauc/meta-rauc.git
+    branch: wrynose
+    layers:
+      .:
   meta-local:
     path: meta-local
 
 local_conf_header:
   minimal-config: |
+    DISTRO_FEATURES:append = " rauc"
     DISTRO_FEATURES:remove = "x11 wayland opengl ptest bluetooth bluez5 pulseaudio alsa 3g nfc pcmcia api-documentation"
     IMAGE_INSTALL:append = " \
       wpa-supplicant \
@@ -44,11 +50,20 @@ local_conf_header:
       udev-rules-rpi \
       kernel-module-brcmfmac \
       kernel-module-brcmfmac-cyw \
-      yocto-mcp"
+      kernel-module-dm-mod \
+      kernel-module-dm-verity \
+      kernel-module-squashfs \
+      libubootenv-bin \
+      u-boot-env \
+      rauc-init \
+      yocto-mcp \
+      rauc"
+    WKS_FILE = "sdimage-rauc.wks"
     WKS_FILE_DEPENDS_BOOTLOADERS:remove:aarch64 = "grub-efi systemd-boot"
     WKS_FILE_DEPENDS:remove = "cdrtools-native btrfs-tools-native"
     IMAGE_FEATURES:append = " ssh-server-dropbear"
-    IMAGE_FSTYPES = "wic.zst wic.bmap"
+    IMAGE_FSTYPES = "ext4 wic.zst wic.bmap"
+    RPI_USE_U_BOOT = "1"
     INHERIT += "extrausers buildstats buildstats-summary"
     EXTRA_USERS_PARAMS = "usermod -p '\$y\$j9T\$X4Ep1wVAwKjpr98l.mtZq1\$4hG7uw4OkOt0utOSvnkoH5k409aIAa3fru7aQDCUN21' root;"
     GPU_MEM = "16"

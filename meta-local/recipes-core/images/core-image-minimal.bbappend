@@ -38,3 +38,18 @@ EOF
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "configure_wpa_supplicant; configure_network_interfaces;"
+
+configure_rauc_mounts() {
+    install -d ${IMAGE_ROOTFS}/boot ${IMAGE_ROOTFS}/data
+    touch ${IMAGE_ROOTFS}/etc/fstab
+
+    if ! grep -qE '^[^#]*[[:space:]]/boot[[:space:]]' ${IMAGE_ROOTFS}/etc/fstab; then
+        echo 'LABEL=boot /boot vfat defaults 0 0' >> ${IMAGE_ROOTFS}/etc/fstab
+    fi
+
+    if ! grep -qE '^[^#]*[[:space:]]/data[[:space:]]' ${IMAGE_ROOTFS}/etc/fstab; then
+        echo 'LABEL=data /data ext4 defaults 0 2' >> ${IMAGE_ROOTFS}/etc/fstab
+    fi
+}
+
+ROOTFS_POSTPROCESS_COMMAND += "configure_rauc_mounts;"

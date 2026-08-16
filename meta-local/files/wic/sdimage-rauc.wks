@@ -1,0 +1,13 @@
+# short-description: Dual-bank A/B partition layout for RAUC OTA on Raspberry Pi
+# long-description: Creates a partitioned SD card image with:
+#  - FAT32 boot partition (bootloader, kernel, device tree)
+#  - Rootfs A (ext4, /dev/mmcblk0p2)
+#  - Rootfs B (ext4, /dev/mmcblk0p3)
+#  - Data (ext4 persistent partition, /dev/mmcblk0p4)
+
+part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat --label boot --active --align 4096 --size 64
+part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --label rootfsA --align 4096 --size 512
+part --source rootfs --ondisk mmcblk0 --fstype=ext4 --label rootfsB --align 4096 --size 512
+part /data --ondisk mmcblk0 --fstype=ext4 --label data --align 4096 --size 256
+
+bootloader --ptable msdos
