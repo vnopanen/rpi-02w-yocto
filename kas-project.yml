@@ -45,6 +45,7 @@ local_conf_header:
       linux-firmware-rpidistro-bcm43430 \
       udev-rules-rpi \
       kernel-module-brcmfmac"
+    WKS_FILE_DEPENDS_BOOTLOADERS:remove:aarch64 = "grub-efi systemd-boot"
     IMAGE_FEATURES:append = " ssh-server-dropbear"
     IMAGE_FSTYPES = "wic.zst wic.bmap"
     INHERIT += "extrausers"
