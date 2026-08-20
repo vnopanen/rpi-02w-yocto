@@ -64,3 +64,8 @@ local_conf_header:
     IMAGE_LINGUAS = "en-us"
     INHERIT += "rm_work"
     PACKAGE_CLASSES = "package_ipk"
+    BB_HASHSERVE = "auto"
+    BB_HASHSERVE_UPSTREAM = "wss://hashserv.yoctoproject.org/ws"
+    BB_SIGNATURE_HANDLER = "OEEquivHash"
+    SSTATE_MIRRORS ?= "file://.* https://cdn.jsdelivr.net/yocto/sstate/all/PATH;downloadfilename=PATH"
+
