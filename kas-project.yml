@@ -46,6 +46,7 @@ local_conf_header:
       udev-rules-rpi \
       kernel-module-brcmfmac"
     WKS_FILE_DEPENDS_BOOTLOADERS:remove:aarch64 = "grub-efi systemd-boot"
+    WKS_FILE_DEPENDS:remove = "cdrtools-native"
     IMAGE_FEATURES:append = " ssh-server-dropbear"
     IMAGE_FSTYPES = "wic.zst wic.bmap"
     INHERIT += "extrausers"
