@@ -37,8 +37,6 @@ repos:
 local_conf_header:
   minimal-config: |
     DISTRO_FEATURES:remove = "x11 wayland opengl ptest bluetooth bluez5 pulseaudio alsa 3g nfc pcmcia api-documentation"
-    DISTRO_FEATURES:append = " wifi"
-    IMAGE_INSTALL:remove = "man-pages man-db info"
     IMAGE_INSTALL:append = " \
       wpa-supplicant \
       init-ifupdown \
@@ -54,18 +52,15 @@ local_conf_header:
     EXTRA_USERS_PARAMS = "usermod -p '\$y\$j9T\$X4Ep1wVAwKjpr98l.mtZq1\$4hG7uw4OkOt0utOSvnkoH5k409aIAa3fru7aQDCUN21' root;"
     GPU_MEM = "16"
     DISABLE_VC4GRAPHICS = "1"
-    ENABLE_HDMI = "0"
-    ENABLE_AUDIO = "0"
     ENABLE_UART = "1"
     RPI_EXTRA_CONFIG += 'dtoverlay=disable-bt'
+    # disable-bt maps GPIO UART from ttyS0 to ttyAMA0
     SERIAL_CONSOLES = "115200;ttyAMA0"
     CMDLINE:append = " ipv6.disable=1"
     GLIBC_GENERATE_LOCALES = "en_US.UTF-8"
-    IMAGE_LINGUAS = "en-us"
     INHERIT += "rm_work"
     PACKAGE_CLASSES = "package_ipk"
     BB_HASHSERVE = "auto"
     BB_HASHSERVE_UPSTREAM = "wss://hashserv.yoctoproject.org/ws"
     BB_SIGNATURE_HANDLER = "OEEquivHash"
     SSTATE_MIRRORS ?= "file://.* https://cdn.jsdelivr.net/yocto/sstate/all/PATH;downloadfilename=PATH"
-
