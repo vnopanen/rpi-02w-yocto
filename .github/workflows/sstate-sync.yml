@@ -29,9 +29,10 @@ jobs:
 
       - name: Extract linux-raspberrypi artifacts
         run: |
+          set -euo pipefail
           mkdir -p /tmp/pages-site
           cd build/sstate-cache
-          find . -name "*linux-raspberrypi*" -print0 | tar c --null -T - | tar x -C /tmp/pages-site/
+          find . -name "*linux-raspberrypi*" -print0 | tar --null -T - -cf - | tar -xf - -C /tmp/pages-site/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
