@@ -1,4 +1,4 @@
-name: sync sstate cache
+name: build
 
 on:
   push:
@@ -30,6 +30,15 @@ jobs:
 
       - name: Build via kas-container
         run: ./kas-container build kas-project.yml
+
+      - name: Upload SD Card Image Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: rpi-02w-sd-image
+          path: |
+            build/tmp/deploy/images/**/*.wic.zst
+            build/tmp/deploy/images/**/*.bmap
+          retention-days: 2
 
       - name: Copy sstate cache contents
         run: |
