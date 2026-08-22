@@ -4,8 +4,9 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'layers/meta-raspberrypi/**'
       - 'kas-project.yml'
+      - '.github/workflows/**'
+      - 'meta-local/**'
   workflow_dispatch:
 
 permissions:
@@ -27,8 +28,8 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v7
 
-      - name: Build Kernel SState via kas-container
-        run: ./kas-container build kas-project.yml --target linux-raspberrypi
+      - name: Build via kas-container
+        run: ./kas-container build kas-project.yml
 
       - name: Copy sstate cache contents
         run: |
