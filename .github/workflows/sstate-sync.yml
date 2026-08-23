@@ -43,7 +43,7 @@ jobs:
           echo "### Sstate cache reuse" >> "$SUMMARY_FILE"
           echo '```text' >> "$SUMMARY_FILE"
           if [ -f "build.log" ]; then
-              { grep -E "Build completion summary:|sstate reuse" build.log || echo "No summary found in build.log"; } >> "$SUMMARY_FILE"
+              { grep -Ei "Sstate summary:|sstate reuse|build completion summary" build.log || echo "No summary found in build.log"; } >> "$SUMMARY_FILE"
           else
               echo "build.log not found." >> "$SUMMARY_FILE"
           fi
