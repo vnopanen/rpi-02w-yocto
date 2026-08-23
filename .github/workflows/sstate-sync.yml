@@ -90,6 +90,7 @@ jobs:
           mkdir -p /tmp/pages-site
           cd build/sstate-cache
           cp -a . /tmp/pages-site/
+          find /tmp/pages-site -size -1k \( -name "*.tar.zst" -o -name "*.tar.gz" -o -name "*.tar.xz" \) -print -delete || true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
