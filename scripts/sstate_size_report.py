@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import sys
-import os
 from pathlib import Path
 
 def format_size(size_bytes):
@@ -52,9 +51,11 @@ if __name__ == "__main__":
         print(f"### SState Cache Storage Analysis")
         print(f"- **Total Cache Footprint:** {data['total_size_human']} across `{data['total_files']}` total files")
         print("")
-        print(f"#### Top {len(data['largest_artifacts'])} Largest Individual SState Packages:")
-        print("| Size | Package Name |")
-        print("| :--- | :--- |")
+        print(f"<details>")
+        print(f"<summary><b>Top {len(data['largest_artifacts'])} Largest Individual SState Packages</b></summary>")
+        print("")
         for name, size in data['largest_artifacts']:
-            print(f"| `{format_size(size)}` | `{name}` |")
+            print(f"- `{format_size(size)}` — `{name}`")
+        print("")
+        print(f"</details>")
           
