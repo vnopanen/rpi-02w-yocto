@@ -57,7 +57,7 @@ jobs:
           if [ -d "$BS_DIR" ] && [ -f "$BS_SCRIPT" ]; then
               echo "<details>" >> "$SUMMARY_FILE"
               echo "<summary><b>Top $BS_COUNT longest-running build tasks</b></summary>" >> "$SUMMARY_FILE"
-              echo ""
+          echo "" >> "$SUMMARY_FILE"
               echo '```text' >> "$SUMMARY_FILE"
           python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR" | tail -n "$BS_COUNT" >> "$SUMMARY_FILE"
               echo '```' >> "$SUMMARY_FILE"
