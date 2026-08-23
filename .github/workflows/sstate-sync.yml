@@ -36,8 +36,8 @@ jobs:
         with:
           name: rpi-02w-sd-image
           path: |
-            build/tmp/deploy/images/**/*.wic.zst
-            build/tmp/deploy/images/**/*.bmap
+            build/tmp/deploy/images/raspberrypi0-2w-64/core-image-minimal-raspberrypi0-2w-64.rootfs.wic.zst
+            build/tmp/deploy/images/raspberrypi0-2w-64/core-image-minimal-raspberrypi0-2w-64.rootfs.wic.bmap
           retention-days: 2
 
       - name: Copy sstate cache contents
