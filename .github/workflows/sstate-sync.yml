@@ -60,9 +60,9 @@ jobs:
               echo "" >> "$SUMMARY_FILE"
               echo '```text' >> "$SUMMARY_FILE"
               BS_REPORT=$(python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR")
-              BS_LINES=$(printf '%s\n' "$BS_REPORT" | wc -l | tr -d ' ')
+              BS_LINES=$(printf '%s' "$BS_REPORT" | awk 'END { print NR }')
               BS_START=$(( BS_LINES > BS_COUNT ? BS_LINES - BS_COUNT + 1 : 1 ))
-              printf '%s\n' "$BS_REPORT" | sed -n "${BS_START},\$p" >> "$SUMMARY_FILE"
+              printf '%s' "$BS_REPORT" | sed -n "${BS_START},\$p" >> "$SUMMARY_FILE"
               echo '```' >> "$SUMMARY_FILE"
               echo "</details>" >> "$SUMMARY_FILE"
           else
