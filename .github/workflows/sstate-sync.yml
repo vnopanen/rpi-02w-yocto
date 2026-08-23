@@ -29,7 +29,45 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Build via kas-container
-        run: ./kas-container build kas-project.yml
+        run: |
+          set -o pipefail
+          ./kas-container build kas-project.yml 2>&1 | tee build.log
+
+      - name: Job summary report
+        if: always()
+        run: |
+          SUMMARY_FILE="$GITHUB_STEP_SUMMARY"
+          
+          echo "## Build & cache report" >> "$SUMMARY_FILE"
+          echo ""
+          echo "### Sstate cache reuse" >> "$SUMMARY_FILE"
+          echo '```text' >> "$SUMMARY_FILE"
+          if [ -f "build.log" ]; then
+              { grep -Ei "Sstate summary:|sstate reuse|build completion summary" build.log || echo "No summary found in build.log"; } >> "$SUMMARY_FILE"
+          else
+              echo "build.log not found." >> "$SUMMARY_FILE"
+          fi
+          echo '```' >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+
+          BS_DIR=$(ls -td build/tmp/buildstats/*/ 2>/dev/null | head -n 1 || true)
+          BS_SCRIPT="openembedded-core/scripts/buildstats-summary"
+          BS_COUNT=50
+
+          if [ -d "$BS_DIR" ] && [ -f "$BS_SCRIPT" ]; then
+              echo "<details>" >> "$SUMMARY_FILE"
+              echo "<summary><b>Top $BS_COUNT longest-running build tasks</b></summary>" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+              echo '```text' >> "$SUMMARY_FILE"
+          python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR" | tail -n "$BS_COUNT" >> "$SUMMARY_FILE"
+              echo '```' >> "$SUMMARY_FILE"
+              echo "</details>" >> "$SUMMARY_FILE"
+          else
+              echo "Buildstats not available." >> "$SUMMARY_FILE"
+          fi
+          echo "" >> "$SUMMARY_FILE"
+
+          python3 scripts/sstate_size_report.py build/sstate-cache "$BS_COUNT" >> "$SUMMARY_FILE" || true
 
       - name: Upload SD Card Image Artifact
         uses: actions/upload-artifact@v7
