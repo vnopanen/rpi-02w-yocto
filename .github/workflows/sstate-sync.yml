@@ -65,6 +65,9 @@ jobs:
           else
               echo "Buildstats not available." >> "$SUMMARY_FILE"
           fi
+          echo "" >> "$SUMMARY_FILE"
+
+          python3 scripts/sstate_size_report.py build/sstate-cache "$BS_COUNT" >> "$SUMMARY_FILE" || true
 
       - name: Upload SD Card Image Artifact
         uses: actions/upload-artifact@v7
