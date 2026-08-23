@@ -59,12 +59,7 @@ jobs:
               echo "<summary><b>Top $BS_COUNT longest-running build tasks</b></summary>" >> "$SUMMARY_FILE"
               echo "" >> "$SUMMARY_FILE"
               echo '```text' >> "$SUMMARY_FILE"
-              BS_REPORT_FILE=$(mktemp)
-              python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR" > "$BS_REPORT_FILE"
-              BS_LINES=$(awk 'END { print NR }' "$BS_REPORT_FILE")
-              BS_START=$(( BS_LINES > BS_COUNT ? BS_LINES - BS_COUNT + 1 : 1 ))
-              sed -n "${BS_START},\$p" "$BS_REPORT_FILE" >> "$SUMMARY_FILE"
-              rm -f "$BS_REPORT_FILE"
+              python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR" | sed -n "1,${BS_COUNT}p" >> "$SUMMARY_FILE" || true
               echo '```' >> "$SUMMARY_FILE"
               echo "</details>" >> "$SUMMARY_FILE"
           else
@@ -72,7 +67,13 @@ jobs:
           fi
           echo "" >> "$SUMMARY_FILE"
 
-          python3 scripts/sstate_size_report.py build/sstate-cache "$BS_COUNT" >> "$SUMMARY_FILE" || true
+          echo "<details>" >> "$SUMMARY_FILE"
+          echo "<summary><b>Top $BS_COUNT largest individual SState packages</b></summary>" >> "$SUMMARY_FILE"
+          echo "" >> "$SUMMARY_FILE"
+          echo '```text' >> "$SUMMARY_FILE"
+          python3 scripts/sstate_size_report.py build/sstate-cache | sed -n "1,${BS_COUNT}p" >> "$SUMMARY_FILE" || true
+          echo '```' >> "$SUMMARY_FILE"
+          echo "</details>" >> "$SUMMARY_FILE"
 
       - name: Upload SD Card Image Artifact
         uses: actions/upload-artifact@v7
