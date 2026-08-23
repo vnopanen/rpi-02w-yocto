@@ -48,9 +48,9 @@ jobs:
               echo "build.log not found." >> "$SUMMARY_FILE"
           fi
           echo '```' >> "$SUMMARY_FILE"
-          echo ""
+          echo "" >> "$SUMMARY_FILE"
 
-          BS_DIR=$(ls -td build/tmp/buildstats/*/ 2>/dev/null | head -n 1)
+          BS_DIR=$(ls -td build/tmp/buildstats/*/ 2>/dev/null | head -n 1 || true)
           BS_SCRIPT="openembedded-core/scripts/buildstats-summary"
           BS_COUNT=50
 
@@ -59,7 +59,7 @@ jobs:
               echo "<summary><b>Top $BS_COUNT longest-running build tasks</b></summary>" >> "$SUMMARY_FILE"
               echo ""
               echo '```text' >> "$SUMMARY_FILE"
-              python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR" | head -n "$BS_COUNT" >> "$SUMMARY_FILE"
+              python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR" | sed -n "1,${BS_COUNT}p" >> "$SUMMARY_FILE"
               echo '```' >> "$SUMMARY_FILE"
               echo "</details>" >> "$SUMMARY_FILE"
           else
