@@ -59,7 +59,7 @@ jobs:
               echo "<summary><b>Top $BS_COUNT longest-running build tasks</b></summary>" >> "$SUMMARY_FILE"
               echo ""
               echo '```text' >> "$SUMMARY_FILE"
-              python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR" | sed -n "1,${BS_COUNT}p" >> "$SUMMARY_FILE"
+          python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR" | tail -n "$BS_COUNT" >> "$SUMMARY_FILE"
               echo '```' >> "$SUMMARY_FILE"
               echo "</details>" >> "$SUMMARY_FILE"
           else
