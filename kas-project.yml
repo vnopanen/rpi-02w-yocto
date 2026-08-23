@@ -43,6 +43,7 @@ local_conf_header:
       linux-firmware-rpidistro-bcm43430 \
       udev-rules-rpi \
       kernel-module-brcmfmac \
+      kernel-module-brcmfmac-cyw \
       yocto-mcp"
     WKS_FILE_DEPENDS_BOOTLOADERS:remove:aarch64 = "grub-efi systemd-boot"
     WKS_FILE_DEPENDS:remove = "cdrtools-native btrfs-tools-native"
