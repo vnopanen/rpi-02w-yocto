@@ -22,7 +22,7 @@ def iter_sstate_artifacts(sstate_path):
                 continue
 
 
-def analyze_sstate(sstate_dir, top_n=None):
+def analyze_sstate(sstate_dir):
     sstate_path = Path(sstate_dir)
     if not sstate_path.exists():
         print(f"WARN: SState directory '{sstate_dir}' not found.", file=sys.stderr)
@@ -34,7 +34,7 @@ def analyze_sstate(sstate_dir, top_n=None):
 if __name__ == "__main__":
     sstate_dir = sys.argv[1] if len(sys.argv) > 1 else "build/sstate-cache"
 
-    data = analyze_sstate(sstate_dir, top_n)
+    data = analyze_sstate(sstate_dir)
     if data:
         for name, size in data:
             print(f"{format_size(size)}    {name}")
