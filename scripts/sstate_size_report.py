@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import heapq
 import sys
 from pathlib import Path
 
@@ -30,13 +29,10 @@ def analyze_sstate(sstate_dir, top_n=None):
         return None
 
     artifacts = iter_sstate_artifacts(sstate_path)
-    if top_n is not None:
-        return heapq.nlargest(top_n, artifacts, key=lambda x: x[1])
-    return sorted(artifacts, key=lambda x: x[1], reverse=True)
+    return sorted(artifacts, key=lambda x: x[1])
 
 if __name__ == "__main__":
     sstate_dir = sys.argv[1] if len(sys.argv) > 1 else "build/sstate-cache"
-    top_n = int(sys.argv[2]) if len(sys.argv) > 2 else None
 
     data = analyze_sstate(sstate_dir, top_n)
     if data:
