@@ -29,7 +29,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Build via kas-container
-        run: ./kas-container build kas-project.yml 2>&1 | tee build.log
+        run: |
+          set -o pipefail
+          ./kas-container build kas-project.yml 2>&1 | tee build.log
 
       - name: Job summary report
         if: always()
