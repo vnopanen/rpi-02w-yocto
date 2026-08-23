@@ -1,0 +1,2 @@
+# Allow root logins via public key, disable password logins (-s)
+DROPBEAR_EXTRA_ARGS="-s"
