@@ -37,43 +37,52 @@ jobs:
         if: always()
         run: |
           SUMMARY_FILE="$GITHUB_STEP_SUMMARY"
-          
-          echo "## Build & cache report" >> "$SUMMARY_FILE"
-          echo ""
-          echo "### Sstate cache reuse" >> "$SUMMARY_FILE"
-          echo '```text' >> "$SUMMARY_FILE"
+
+          print_summary() {
+              printf '%s\n' "$@" >> "$SUMMARY_FILE"
+          }
+
+          print_summary \
+              "## Build & cache report" \
+              "" \
+              "### Sstate cache reuse" \
+              '```text'
           if [ -f "build.log" ]; then
-              { grep -Ei "Sstate summary:|sstate reuse|build completion summary" build.log || echo "No summary found in build.log"; } >> "$SUMMARY_FILE"
+              if ! grep -Ei "Sstate summary:|sstate reuse|build completion summary" build.log >> "$SUMMARY_FILE"; then
+                  print_summary "No summary found in build.log"
+              fi
           else
-              echo "build.log not found." >> "$SUMMARY_FILE"
+              print_summary "build.log not found."
           fi
-          echo '```' >> "$SUMMARY_FILE"
-          echo "" >> "$SUMMARY_FILE"
+          print_summary '```' ""
 
           BS_DIR=$(ls -td build/tmp/buildstats/*/ 2>/dev/null | head -n 1 || true)
           BS_SCRIPT="openembedded-core/scripts/buildstats-summary"
           BS_COUNT=50
 
           if [ -d "$BS_DIR" ] && [ -f "$BS_SCRIPT" ]; then
-              echo "<details>" >> "$SUMMARY_FILE"
-              echo "<summary><b>Top $BS_COUNT longest-running build tasks</b></summary>" >> "$SUMMARY_FILE"
-              echo "" >> "$SUMMARY_FILE"
-              echo '```text' >> "$SUMMARY_FILE"
-              python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR" | tail -n "$BS_COUNT" | tac >> "$SUMMARY_FILE" || true
-              echo '```' >> "$SUMMARY_FILE"
-              echo "</details>" >> "$SUMMARY_FILE"
+              print_summary \
+                  "<details>" \
+                  "<summary><b>Top $BS_COUNT longest-running build tasks</b></summary>" \
+                  "" \
+                  '```text'
+              python3 "$BS_SCRIPT" --sort duration --highlight 0 "$BS_DIR" |
+                  tail -n "$BS_COUNT" |
+                  tac >> "$SUMMARY_FILE" || true
+              print_summary '```' '</details>' ""
           else
-              echo "Buildstats not available." >> "$SUMMARY_FILE"
+              print_summary "Buildstats not available." ""
           fi
-          echo "" >> "$SUMMARY_FILE"
 
-          echo "<details>" >> "$SUMMARY_FILE"
-          echo "<summary><b>Top $BS_COUNT largest individual SState packages</b></summary>" >> "$SUMMARY_FILE"
-          echo "" >> "$SUMMARY_FILE"
-          echo '```text' >> "$SUMMARY_FILE"
-          python3 scripts/sstate_size_report.py build/sstate-cache | tail -n "$BS_COUNT" | tac >> "$SUMMARY_FILE" || true
-          echo '```' >> "$SUMMARY_FILE"
-          echo "</details>" >> "$SUMMARY_FILE"
+          print_summary \
+              "<details>" \
+              "<summary><b>Top $BS_COUNT largest individual SState packages</b></summary>" \
+              "" \
+              '```text'
+          python3 scripts/sstate_size_report.py build/sstate-cache |
+              tail -n "$BS_COUNT" |
+              tac >> "$SUMMARY_FILE" || true
+          print_summary '```' '</details>' ""
 
       - name: Upload SD Card Image Artifact
         uses: actions/upload-artifact@v7
@@ -101,13 +110,6 @@ jobs:
           if ((${#ARCHIVES[@]})); then
               printf '%s\0' "${ARCHIVES[@]}" | xargs -0 -r zstd -q -t
           fi
-
-          {
-              echo "### Sstate cache validation"
-              echo
-              echo "Validated ${#ARCHIVES[@]} Zstandard archives and matching .siginfo files."
-              echo "Archive integrity check: passed"
-          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload sstate-cache
         uses: actions/upload-pages-artifact@v5
