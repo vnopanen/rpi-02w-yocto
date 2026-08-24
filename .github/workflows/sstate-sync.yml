@@ -104,7 +104,7 @@ jobs:
             --yes \
             --verbose
 
-          python3 scripts/validate_sstate_cache.py "$CACHE_DIR"
+          python3 scripts/sstate_validate.py "$CACHE_DIR"
 
           mapfile -d '' ARCHIVES < <(find "$CACHE_DIR" -type f -name '*.tar.zst' -print0)
           if ((${#ARCHIVES[@]})); then
