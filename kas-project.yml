@@ -50,12 +50,9 @@ local_conf_header:
       udev-rules-rpi \
       kernel-module-brcmfmac \
       kernel-module-brcmfmac-cyw \
-      kernel-module-dm-mod \
-      kernel-module-dm-verity \
-      kernel-module-squashfs \
       libubootenv-bin \
       u-boot-env \
-      rauc-init \
+      grow-data-partition \
       yocto-mcp \
       rauc"
     WKS_FILE = "sdimage-rauc.wks"
