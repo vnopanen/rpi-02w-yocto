@@ -84,19 +84,35 @@ jobs:
             build/tmp/deploy/images/raspberrypi0-2w-64/core-image-minimal-raspberrypi0-2w-64.rootfs.wic.bmap
           retention-days: 2
 
-      - name: Copy sstate cache contents
+      - name: Validate sstate cache
         run: |
           set -euo pipefail
-          mkdir -p /tmp/pages-site
-          cd build/sstate-cache
-          cp -a . /tmp/pages-site/
-          find /tmp/pages-site -size -1024c \( -name "*.tgz" -o -name "*.tar.zst" -o -name "*.tar.gz" -o -name "*.tar.xz" \) \
-            -print -exec rm -f {} {}.siginfo \; || true
+          CACHE_DIR=build/sstate-cache
 
-      - name: Upload Pages artifact
+          python3 openembedded-core/scripts/sstate-cache-management.py \
+            --cache-dir "$CACHE_DIR" \
+            --remove-orphans \
+            --yes \
+            --verbose
+
+          python3 scripts/validate_sstate_cache.py "$CACHE_DIR"
+
+          mapfile -d '' ARCHIVES < <(find "$CACHE_DIR" -type f -name '*.tar.zst' -print0)
+          if ((${#ARCHIVES[@]})); then
+              printf '%s\0' "${ARCHIVES[@]}" | xargs -0 -r zstd -q -t
+          fi
+
+          {
+              echo "### Sstate cache validation"
+              echo
+              echo "Validated ${#ARCHIVES[@]} Zstandard archives and matching .siginfo files."
+              echo "Archive integrity check: passed"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload sstate-cache
         uses: actions/upload-pages-artifact@v5
         with:
-          path: /tmp/pages-site
+          path: build/sstate-cache
 
       - name: Deploy to GitHub Pages
         id: deployment
