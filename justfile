@@ -10,6 +10,10 @@ default:
 build:
     ./kas-container build kas-project.yml
 
+# Build only the RAUC update bundle.
+update-bundle:
+    ./kas-container shell kas-project.yml -c 'bitbake update-bundle'
+
 # Report individual sstate archive sizes.
 sstate-report:
     python3 scripts/sstate_size_report.py {{sstate_dir}}
