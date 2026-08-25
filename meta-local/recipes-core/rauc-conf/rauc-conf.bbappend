@@ -6,3 +6,11 @@ SRC_URI:append = " \
 "
 
 RAUC_KEYRING_FILE = "ca.cert.pem"
+
+python __anonymous() {
+    import os
+
+    cert_file = d.expand("${LAYERDIR_meta-local}/../keys/ca.cert.pem")
+    if not os.path.isfile(cert_file):
+        bb.fatal("RAUC certificate is missing: %s" % cert_file)
+}
