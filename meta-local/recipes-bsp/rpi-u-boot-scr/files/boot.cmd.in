@@ -1,4 +1,10 @@
-fdt addr ${fdt_addr} && fdt get value bootargs /chosen bootargs
+setenv bootargs
+if fdt addr ${fdt_addr} && fdt get value bootargs /chosen bootargs; then
+    echo "Loaded bootargs from device tree"
+else
+    echo "Warning: cannot read bootargs from device tree"
+    reset
+fi
 
 test -n "${BOOT_ORDER}" || setenv BOOT_ORDER "A B"
 test -n "${BOOT_A_LEFT}" || setenv BOOT_A_LEFT 3
