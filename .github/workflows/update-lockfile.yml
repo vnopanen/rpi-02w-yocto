@@ -27,7 +27,7 @@ jobs:
           if git diff --quiet; then
             echo "No upstream changes. Lockfile is up to date."
           else
-            git add *.lock.yml
+            git add kas-project.lock.yml
             git commit -m "chore(kas): update lockfile"
             git push
             echo "Lockfile updated and pushed successfully!"
