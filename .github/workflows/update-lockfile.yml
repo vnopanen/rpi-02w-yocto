@@ -18,8 +18,7 @@ jobs:
 
       - name: Update kas lockfile via kas-container
         run: |
-          ./kas-container dump --lock --inplace --update kas-project.yml
-
+          ./kas-container lock --update kas-project.yml
       - name: Commit and push changes if lockfile updated
         run: |
           git config --global user.name "github-actions[bot]"
