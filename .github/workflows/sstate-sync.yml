@@ -4,8 +4,8 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'kas-project.yml'
-      - '.github/workflows/**'
+      - 'kas-*'
+      - '.github/workflows/sstate-sync.yml'
       - 'meta-local/**'
   workflow_dispatch:
 
