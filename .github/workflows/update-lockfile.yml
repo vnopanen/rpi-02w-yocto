@@ -31,5 +31,6 @@ jobs:
             git commit -m "chore(kas): update lockfile"
             git push
             echo "Lockfile updated and pushed successfully!"
+            gh workflow run sstate-sync.yml
           fi
           
