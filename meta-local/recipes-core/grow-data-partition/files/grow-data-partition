@@ -1,0 +1,38 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          grow-data-partition
+# Required-Start:    mountvirtfs
+# Required-Stop:
+# Default-Start:     S
+# Default-Stop:      0 1 6
+# Short-Description: Grow the data partition
+### END INIT INFO
+
+DEVICE=/dev/mmcblk0
+DATA_PARTITION=${DEVICE}p4
+
+case "$1" in
+    start)
+        # A different boot medium or an image with no trailing space is a
+        # normal no-op. The job runs before mountall so /data is not mounted.
+        if [ -b "$DEVICE" ] && [ -b "$DATA_PARTITION" ]; then
+            if ! /usr/sbin/parted --script "$DEVICE" resizepart 4 100%; then
+                echo "Warning: failed to resize data partition" >&2
+            else
+                /usr/sbin/partprobe "$DEVICE" || true
+                if ! /sbin/resize2fs "$DATA_PARTITION"; then
+                    echo "Warning: failed to resize data filesystem" >&2
+                fi
+            fi
+        fi
+        ;;
+    stop|restart|force-reload|status)
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|force-reload|status}"
+        exit 1
+        ;;
+esac
+
+exit 0

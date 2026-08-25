@@ -10,6 +10,16 @@ default:
 build:
     ./kas-container build kas-project.yml
 
+# Build only the RAUC update bundle.
+update-bundle:
+    ./kas-container shell kas-project.yml -c 'bitbake update-bundle'
+
+# Copy and install the RAUC update bundle on the board.
+update-install board_ip:
+    scp build/tmp/deploy/images/raspberrypi0-2w-64/update-bundle-raspberrypi0-2w-64.raucb \
+        root@{{board_ip}}:/tmp/update.raucb && \
+        ssh root@{{board_ip}} 'rauc install /tmp/update.raucb && reboot'
+
 # Report individual sstate archive sizes.
 sstate-report:
     python3 scripts/sstate_size_report.py {{sstate_dir}}
