@@ -1,0 +1,36 @@
+name: update lockfile
+
+on:
+  schedule:
+    # Runs every Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Update kas lockfile via kas-container
+        run: |
+          ./kas-container dump --lock --inplace --update kas-project.yml
+
+      - name: Commit and push changes if lockfile updated
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          if git diff --quiet; then
+            echo "No upstream changes. Lockfile is up to date."
+          else
+            git add *.lock.yml
+            git commit -m "chore(kas): update lockfile"
+            git push
+            echo "Lockfile updated and pushed successfully!"
+          fi
+          
