@@ -1,4 +1,4 @@
-FILESEXTRAPATHS:prepend := "${LAYERDIR_meta-local}/../keys:${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI:append = " \
     file://system.conf \
@@ -10,7 +10,7 @@ RAUC_KEYRING_FILE = "ca.cert.pem"
 python __anonymous() {
     import os
 
-    cert_file = d.expand("${LAYERDIR_meta-local}/../keys/ca.cert.pem")
+    cert_file = d.expand("${THISDIR}/files/ca.cert.pem")
     if not os.path.isfile(cert_file):
         bb.fatal("RAUC certificate is missing: %s" % cert_file)
 }

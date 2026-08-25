@@ -14,13 +14,18 @@ RAUC_SLOT_rootfs[type] = "image"
 RAUC_SLOT_rootfs[fstype] = "ext4"
 
 RAUC_KEY_FILE ?= "${LAYERDIR_meta-local}/../keys/ca.key.pem"
-RAUC_CERT_FILE ?= "${LAYERDIR_meta-local}/../keys/ca.cert.pem"
+RAUC_CERT_FILE ?= "${LAYERDIR_meta-local}/recipes-core/rauc-conf/files/ca.cert.pem"
 
 python __anonymous() {
     import os
 
-    for variable in ("RAUC_KEY_FILE", "RAUC_CERT_FILE"):
-        file_path = d.expand(d.getVar(variable) or "")
-        if not os.path.isfile(file_path):
-            bb.fatal("%s is missing: %s" % (variable, file_path or "<unset>"))
+    cert_file = d.expand(d.getVar("RAUC_CERT_FILE") or "")
+    if not os.path.isfile(cert_file):
+        bb.fatal("RAUC_CERT_FILE is missing: %s" % (cert_file or "<unset>"))
+}
+
+do_bundle:prepend() {
+    if [ -z "${RAUC_KEY_FILE}" ] || [ ! -f "${RAUC_KEY_FILE}" ]; then
+        bbfatal "RAUC_KEY_FILE is missing: ${RAUC_KEY_FILE}"
+    fi
 }
