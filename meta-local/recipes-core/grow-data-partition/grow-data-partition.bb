@@ -12,7 +12,7 @@ S = "${UNPACKDIR}"
 RDEPENDS:${PN} = "parted e2fsprogs-resize2fs"
 
 INITSCRIPT_NAME = "grow-data-partition"
-INITSCRIPT_PARAMS = "defaults 98 20"
+INITSCRIPT_PARAMS = "start 03 S . stop 20 0 1 6 ."
 
 do_install() {
     install -D -m 0755 ${UNPACKDIR}/grow-data-partition \
