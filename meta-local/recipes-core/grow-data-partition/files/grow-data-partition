@@ -18,12 +18,12 @@ case "$1" in
         # normal no-op. The job runs before mountall so /data is not mounted.
         if [ -b "$DEVICE" ] && [ -b "$DATA_PARTITION" ]; then
             if ! /usr/sbin/parted --script "$DEVICE" resizepart 4 100%; then
-                echo "Warning: failed to resize data partition"
-                exit 1
-            fi
-            if ! /sbin/resize2fs "$DATA_PARTITION"; then
-                echo "Warning: failed to resize data filesystem"
-                exit 1
+                echo "Warning: failed to resize data partition" >&2
+            else
+                /usr/sbin/partprobe "$DEVICE" || true
+                if ! /sbin/resize2fs "$DATA_PARTITION"; then
+                    echo "Warning: failed to resize data filesystem" >&2
+                fi
             fi
         fi
         ;;
