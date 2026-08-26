@@ -44,6 +44,19 @@ WIFI_PSK="YourWiFiPassword"
 
 *(Note: Ensure `.env` is kept private and listed in `.gitignore` so secrets are not committed).*
 
+### RAUC keys
+Generate a development key pair for RAUC update bundle signing and target verification with:
+
+```bash
+mkdir -p keys
+openssl req -x509 -newkey rsa:4096 -nodes \
+    -keyout keys/ca.key.pem \
+    -out keys/ca.cert.pem \
+    -days 3650 -subj "/CN=Development CA"
+```
+
+Keep both keys in the git-ignored `keys/` directory.
+
 ---
 
 ## Build
@@ -52,6 +65,12 @@ Ensure you have Docker/Podman installed. Run the build using `kas-container`:
 
 ```bash
 ./kas-container build kas-project.yml
+```
+
+For RAUC update bundle:
+
+```bash
+./kas-container shell kas-project.yml -c 'bitbake update-bundle'
 ```
 
 ---
