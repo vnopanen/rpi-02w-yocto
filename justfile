@@ -10,6 +10,10 @@ default:
 build:
     ./kas-container build kas-project.yml
 
+# Flash the image to /dev/mmcblk0
+flash:
+    sudo bmaptool copy build/tmp/deploy/images/raspberrypi0-2w-64/core-image-minimal-raspberrypi0-2w-64.rootfs.wic.zst /dev/mmcblk0
+
 # Build only the RAUC update bundle.
 update-bundle:
     ./kas-container shell kas-project.yml -c 'bitbake update-bundle'
