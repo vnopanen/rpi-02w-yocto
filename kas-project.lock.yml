@@ -5,11 +5,11 @@ overrides:
         bitbake:
             commit: 0ad6c1c34a5e07a5f8dd66ab248c1e7b37b69fa9
         openembedded-core:
-            commit: ef022bf82d79015802309d14c28b13373ebe53f5
+            commit: f7397af248e1e338929d70a910b0fbc2341528ec
         meta-yocto:
             commit: 1b132647002eea43a2c7a7f857f63f42dacbc26c
         meta-openembedded:
-            commit: 6bf0d8ad57b33950bab4c7f6c037e1ccb6f6e2eb
+            commit: 14282a02be9c74a1276a7cda7d6c89e054699a11
         meta-raspberrypi:
             commit: f62c67921474370829d24a4fa01ef88543f3906b
         meta-rauc:
