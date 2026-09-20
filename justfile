@@ -4,15 +4,18 @@ sstate_dir := "build/sstate-cache"
 
 [private]
 default:
-    @just --choose --unsorted
+    @just --list --unsorted
 
 # Build the image with kas-container.
 build:
     ./kas-container build kas-project.yml
 
-# Flash the image to /dev/mmcblk0
-flash:
-    sudo bmaptool copy build/tmp/deploy/images/raspberrypi0-2w-64/core-image-minimal-raspberrypi0-2w-64.rootfs.wic.zst /dev/mmcblk0
+# Flash to device and inject wifi secrets
+flash device="/dev/mmcblk0" env="~/rpi-02w-yocto.env":
+    sudo bmaptool copy \
+    build/tmp/deploy/images/raspberrypi0-2w-64/core-image-minimal-raspberrypi0-2w-64.rootfs.wic.zst \
+    {{device}} \
+    && sudo ./scripts/conf_wpa_supplicant.sh {{device}} {{env}}
 
 # Build only the RAUC update bundle.
 update-bundle:

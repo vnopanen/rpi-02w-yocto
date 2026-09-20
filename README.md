@@ -33,16 +33,12 @@ python3 -c 'import crypt; print(crypt.crypt("your_new_password", crypt.mkhash(cr
 Then replace the hash string inside `EXTRA_USERS_PARAMS` and rebuild the image.
 
 ### Wi-Fi configuration (`.env`)
-Wi-Fi credentials are read dynamically from a `.env` file at the root of this workspace (`meta-local/recipes-core/images/core-image-minimal.bbappend`).
-
-Create a `.env` file in the project root before building:
+Wi-Fi credentials are injected in flash step. Create `~/rpi-02w-yocto.env` before flashing:
 
 ```env
 WIFI_SSID="YourWiFiSSID"
 WIFI_PSK="YourWiFiPassword"
 ```
-
-*(Note: Ensure `.env` is kept private and listed in `.gitignore` so secrets are not committed).*
 
 ### RAUC keys
 Generate a development key pair for RAUC update bundle signing and target verification with:
@@ -64,21 +60,21 @@ Keep both keys in the git-ignored `keys/` directory.
 Ensure you have Docker/Podman installed. Run the build using `kas-container`:
 
 ```bash
-./kas-container build kas-project.yml
+just build
 ```
 
 For RAUC update bundle:
 
 ```bash
-./kas-container shell kas-project.yml -c 'bitbake update-bundle'
+just update-bundle
 ```
 
 ---
 
 ## Flash
 
-*(Note: Replace `/dev/mmcblk0` with your actual SD card device name)*
-
 ```bash
-sudo bmaptool copy build/tmp/deploy/images/raspberrypi0-2w-64/core-image-minimal-raspberrypi0-2w-64.rootfs.wic.zst /dev/mmcblk0
+just flash
+# or explicitly if not using defaults:
+just flash /dev/mmcblk0 ~/rpi-02w-yocto.env
 ```
