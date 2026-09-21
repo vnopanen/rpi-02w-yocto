@@ -3,13 +3,13 @@ header:
 overrides:
     repos:
         bitbake:
-            commit: 0ad6c1c34a5e07a5f8dd66ab248c1e7b37b69fa9
+            commit: f0df79b6b56f6a69067adf974978d9405077f246
         openembedded-core:
-            commit: 9da814ca3685ada3fce46b8987f04ed3d57247b7
+            commit: 883075157987ca300af59185b903d6d1977234c3
         meta-yocto:
-            commit: 1b132647002eea43a2c7a7f857f63f42dacbc26c
+            commit: ddeeba423ff0565b8f1192f16072b5993d5ea6a0
         meta-openembedded:
-            commit: 14282a02be9c74a1276a7cda7d6c89e054699a11
+            commit: 47d7dbdd10890bbd429bc0cccbe14435c37e5af1
         meta-raspberrypi:
             commit: f62c67921474370829d24a4fa01ef88543f3906b
         meta-rauc:
