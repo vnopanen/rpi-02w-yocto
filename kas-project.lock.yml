@@ -3,9 +3,9 @@ header:
 overrides:
     repos:
         bitbake:
-            commit: f0df79b6b56f6a69067adf974978d9405077f246
+            commit: 84a8d046593840df460c1312365031c817eb8918
         openembedded-core:
-            commit: 883075157987ca300af59185b903d6d1977234c3
+            commit: cc4695f65beb6e5069fbecc16475fa5a27c768e9
         meta-yocto:
             commit: ddeeba423ff0565b8f1192f16072b5993d5ea6a0
         meta-openembedded:
