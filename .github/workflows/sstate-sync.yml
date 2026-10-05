@@ -11,19 +11,17 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages-${{ github.workflow }}"
+  group: "sstate-sync-${{ github.workflow }}"
   cancel-in-progress: true
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
@@ -111,11 +109,15 @@ jobs:
               printf '%s\0' "${ARCHIVES[@]}" | xargs -0 -r zstd -q -t
           fi
 
-      - name: Upload sstate-cache
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: build/sstate-cache
+      - name: Upload downloads and sstate-cache to R2
+        run: |
+          aws s3 sync ./build/downloads/ s3://${{ secrets.R2_BUCKET }}/downloads/ \
+            --endpoint-url ${{ secrets.R2_ENDPOINT }} \
+            --exclude "*.lock" \
+            --exclude "*.tmp" \
+            --exclude "*.done" \
+            --no-progress
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+          aws s3 sync ./build/sstate-cache/ s3://${{ secrets.R2_BUCKET }}/sstate-cache/ \
+            --endpoint-url ${{ secrets.R2_ENDPOINT }} \
+            --no-progress
