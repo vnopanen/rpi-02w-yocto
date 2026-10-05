@@ -78,5 +78,4 @@ local_conf_header:
     BB_SIGNATURE_HANDLER = "OEEquivHash"
     SSTATE_MIRRORS ?= "\
         file://.* https://sstate.vnopanen.fyi/PATH;downloadfilename=PATH \
-        file://.* https://vnopanen.github.io/rpi-02w-yocto/PATH;downloadfilename=PATH \
         file://.* https://sstate.yoctoproject.org/all/PATH;downloadfilename=PATH"
