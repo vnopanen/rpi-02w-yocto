@@ -116,6 +116,7 @@ jobs:
             --exclude "*.lock" \
             --exclude "*.tmp" \
             --exclude "*.done" \
+            --exclude "git2/*" \
             --no-progress
 
           aws s3 sync ./build/sstate-cache/ s3://${{ secrets.R2_BUCKET }}/sstate-cache/ \
