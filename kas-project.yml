@@ -76,6 +76,7 @@ local_conf_header:
     BB_HASHSERVE = "auto"
     BB_HASHSERVE_UPSTREAM = "wss://hashserv.yoctoproject.org/ws"
     BB_SIGNATURE_HANDLER = "OEEquivHash"
+    BB_GIT_SHALLOW = "1"
     SSTATE_MIRRORS ?= "\
         file://.* https://r2.vnopanen.fyi/sstate-cache/PATH;downloadfilename=PATH \
         file://.* https://sstate.yoctoproject.org/all/PATH;downloadfilename=PATH"
