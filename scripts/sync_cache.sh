@@ -22,9 +22,22 @@ if [ -z "${R2_BUCKET:-}" ] || [ -z "${R2_ENDPOINT:-}" ]; then
   exit 1
 fi
 
-EXTRA_SYNC_FLAGS=()
+if ! command -v rclone >/dev/null 2>&1; then
+  echo "Error: 'rclone' is not installed or not in PATH." >&2
+  exit 1
+fi
+
+RCLONE_FLAGS=(
+  --s3-provider Cloudflare
+  --s3-endpoint "$R2_ENDPOINT"
+  --s3-access-key-id "$AWS_ACCESS_KEY_ID"
+  --s3-secret-access-key "$AWS_SECRET_ACCESS_KEY"
+  --fast-list
+  --size-only
+)
+
 if [ "$DRY_RUN" = "true" ]; then
-  EXTRA_SYNC_FLAGS+=(--dryrun)
+  RCLONE_FLAGS+=(--dry-run)
 fi
 
 echo "==> Validating sstate cache in $CACHE_DIR..."
@@ -51,24 +64,20 @@ fi
 
 echo "==> Syncing downloads to R2..."
 if [ -d "$DOWNLOADS_DIR" ]; then
-  aws s3 sync "$DOWNLOADS_DIR/" "s3://${R2_BUCKET}/downloads/" \
-    --endpoint-url "$R2_ENDPOINT" \
+  rclone copy "$DOWNLOADS_DIR/" ":s3:${R2_BUCKET}/downloads/" \
+    "${RCLONE_FLAGS[@]}" \
     --exclude "*.lock" \
     --exclude "*.tmp" \
     --exclude "*.done" \
-    --exclude "git2/*" \
-    --no-progress \
-    "${EXTRA_SYNC_FLAGS[@]}"
+    --exclude "git2/**"
 else
   echo "Info: Downloads directory $DOWNLOADS_DIR not found. Skipping."
 fi
 
 echo "==> Syncing sstate-cache to R2..."
 if [ -d "$CACHE_DIR" ]; then
-  aws s3 sync "$CACHE_DIR/" "s3://${R2_BUCKET}/sstate-cache/" \
-    --endpoint-url "$R2_ENDPOINT" \
-    --no-progress \
-    "${EXTRA_SYNC_FLAGS[@]}"
+  rclone copy "$CACHE_DIR/" ":s3:${R2_BUCKET}/sstate-cache/" \
+    "${RCLONE_FLAGS[@]}"
 else
   echo "Info: Sstate-cache directory $CACHE_DIR not found. Skipping."
 fi

@@ -91,6 +91,9 @@ jobs:
             build/tmp/deploy/images/raspberrypi0-2w-64/core-image-minimal-raspberrypi0-2w-64.rootfs.wic.bmap
           retention-days: 2
 
+      - name: Install rclone
+        run: sudo apt-get update && sudo apt-get install -y rclone
+
       - name: Validate and upload cache to R2
         env:
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
