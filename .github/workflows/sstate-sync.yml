@@ -91,34 +91,9 @@ jobs:
             build/tmp/deploy/images/raspberrypi0-2w-64/core-image-minimal-raspberrypi0-2w-64.rootfs.wic.bmap
           retention-days: 2
 
-      - name: Validate sstate cache
-        run: |
-          set -euo pipefail
-          CACHE_DIR=build/sstate-cache
+      - name: Validate and upload cache to R2
+        env:
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+        run: ./scripts/sync_cache.sh
 
-          python3 openembedded-core/scripts/sstate-cache-management.py \
-            --cache-dir "$CACHE_DIR" \
-            --remove-orphans \
-            --yes \
-            --verbose
-
-          python3 scripts/sstate_validate.py "$CACHE_DIR"
-
-          mapfile -d '' ARCHIVES < <(find "$CACHE_DIR" -type f -name '*.tar.zst' -print0)
-          if ((${#ARCHIVES[@]})); then
-              printf '%s\0' "${ARCHIVES[@]}" | xargs -0 -r zstd -q -t
-          fi
-
-      - name: Upload downloads and sstate-cache to R2
-        run: |
-          aws s3 sync ./build/downloads/ s3://${{ secrets.R2_BUCKET }}/downloads/ \
-            --endpoint-url ${{ secrets.R2_ENDPOINT }} \
-            --exclude "*.lock" \
-            --exclude "*.tmp" \
-            --exclude "*.done" \
-            --exclude "git2/*" \
-            --no-progress
-
-          aws s3 sync ./build/sstate-cache/ s3://${{ secrets.R2_BUCKET }}/sstate-cache/ \
-            --endpoint-url ${{ secrets.R2_ENDPOINT }} \
-            --no-progress
